@@ -38,14 +38,17 @@ public class DatabaseHandler  extends Handler {
     }
 
     private void createTablesIfNotExist() {
-        String firstTable = "CREATE TABLE IF NOT EXISTS users (\n" +
+        String ticketsTable = "CREATE TABLE IF NOT EXISTS tickets (\n" +
                 "    id INT AUTO_INCREMENT PRIMARY KEY,\n" +
-                "    username VARCHAR(255) NOT NULL\n" +
                 ");";
+//        String tickets = "CREATE TABLE IF NOT EXISTS users (\n" +
+//                "    id INT AUTO_INCREMENT PRIMARY KEY,\n" +
+//                "    username VARCHAR(255) NOT NULL\n" +
+//                ");";
 
         try {
             Statement statement = connection.createStatement();
-            statement.executeUpdate(firstTable);
+//            statement.executeUpdate(ticketsTable);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
