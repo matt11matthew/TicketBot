@@ -23,6 +23,7 @@ public class DiscordHandler extends Handler {
 
     @Override
     public void onEnable() {
+        System.out.println(this.config.discord.auth.token);
         JDA jda = JDABuilder.createDefault(this.config.discord.auth.token).build();
         jda.addEventListener(new DiscordListener(this, this.ticketBot, this.config));
 

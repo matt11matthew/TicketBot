@@ -2,6 +2,7 @@ package me.matthewe.ticket;
 
 import me.matthewe.ticket.config.Config;
 import me.matthewe.ticket.database.DatabaseHandler;
+import me.matthewe.ticket.discord.DiscordHandler;
 import me.matthewe.ticket.handler.HandlerManager;
 import me.matthewe.ticket.io.BasicLogger;
 import me.matthewe.ticket.io.console.ConsoleCommandHandler;
@@ -44,6 +45,7 @@ public class TicketBot {
     private void registerHandlers() {
         this.handlerManager.registerHandler(new DatabaseHandler(this, this.config));
         this.handlerManager.registerHandler(new ConsoleCommandHandler(this, this.config));
+        this.handlerManager.registerHandler(new DiscordHandler(this, this.config));
 
     }
 
