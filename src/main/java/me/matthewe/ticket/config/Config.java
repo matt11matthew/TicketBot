@@ -1,6 +1,10 @@
 package me.matthewe.ticket.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+
+import java.util.List;
 
 /**
  * Created by Matthew E on 12/10/2023 at 1:27 PM for the project TicketBot
@@ -18,10 +22,22 @@ public class Config {
         public Auth auth;
         @JsonProperty("channels")
         public Channels channels;
+     @JsonProperty("departments")
+        public List<String> departments;
 
+        @JsonProperty("messages")
+        public Messages messages;
+
+        public static class Messages {
+            @JsonProperty("ready")
+            public EmbedValue ready;
+        }
         public static class Channels {
             @JsonProperty("info")
             public long info;
+
+            @JsonProperty("ticketCategory")
+            public long ticketCategory;
         }
         public static class Auth {
 

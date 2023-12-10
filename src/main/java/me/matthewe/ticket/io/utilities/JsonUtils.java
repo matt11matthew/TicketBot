@@ -1,7 +1,11 @@
 package me.matthewe.ticket.io.utilities;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.matthewe.ticket.config.Config;
+import me.matthewe.ticket.config.EmbedValue;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -17,4 +21,20 @@ public class JsonUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public static void testJsonObject(Object object) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Serialize the object to JSON
+        String json = null;
+        try {
+            json = objectMapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(json);
+
+    }
+
 }

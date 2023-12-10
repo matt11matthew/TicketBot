@@ -1,6 +1,9 @@
 package me.matthewe.ticket;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import me.matthewe.ticket.config.Config;
+import me.matthewe.ticket.config.EmbedValue;
 import me.matthewe.ticket.database.DatabaseHandler;
 import me.matthewe.ticket.discord.DiscordHandler;
 import me.matthewe.ticket.handler.HandlerManager;
@@ -9,7 +12,9 @@ import me.matthewe.ticket.io.console.ConsoleCommandHandler;
 import me.matthewe.ticket.io.console.OnMessage;
 import me.matthewe.ticket.io.console.command.StopConsoleCommand;
 import me.matthewe.ticket.io.utilities.FileUtils;
+import net.dv8tion.jda.api.EmbedBuilder;
 
+import java.awt.*;
 import java.io.File;
 
 import static me.matthewe.ticket.io.utilities.JsonUtils.loadJsonObjectFromFile;
@@ -81,6 +86,7 @@ public class TicketBot {
         }
 
 
+
         Config config = loadJsonObjectFromFile(new File(path), Config.class);
         config.discord.auth.token = FileUtils.readFileToString(new File(tokenPath));
         this.config = config;
@@ -105,6 +111,7 @@ public class TicketBot {
     }
 
     public void handleShutdown() {
+        this.handlerManager.getHandler(DiscordHandler.class).handleShutdownFast();
         logger.info("Handling shutdown down.");
         this.handlerManager.disableHandlers();
 

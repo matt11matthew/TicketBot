@@ -11,12 +11,21 @@
     "database": "tickets"
   },
   "discord": {
+    "messages": {
+      "ready": {
+        "title": "Ticket Bot",
+        "color": -1,
+        "description": "Now Ready!"
+      }
+    },
     "auth": {
       "token": "",
-      "guildId": 1174388099653042200
+      "guildId": 1174388099653042176
     },
+    "departments": ["Plugin Development", "Build"],
     "channels": {
-      "info": 1183495069874016300
+      "info": 1183495069874016256,
+      "ticketCategory": 1183448910522499072
     }
   }
 }
