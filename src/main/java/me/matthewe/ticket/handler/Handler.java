@@ -7,7 +7,7 @@ import me.matthewe.ticket.TicketBot;
  * Created by Matthew E on 12/10/2023 at 11:54 AM for the project TicketBot
  */
 public abstract class Handler {
-    private TicketBot ticketBot;
+    protected TicketBot ticketBot;
 
     public Handler(TicketBot ticketBot) {
         this.ticketBot = ticketBot;

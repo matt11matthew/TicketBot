@@ -15,9 +15,14 @@ public class HandlerManager {
 
     private TicketBot ticketBot;
 
+
     public HandlerManager(TicketBot ticketBot) {
         this.ticketBot = ticketBot;
         this.handlerMap = new HashMap<>();
+    }
+    public <T extends Handler> T getHandler(Class<T> handlerClass) {
+
+        return (T) handlerMap.get(handlerClass.getSimpleName());
     }
 
 
