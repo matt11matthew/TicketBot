@@ -4,6 +4,7 @@ import me.matthewe.ticket.handler.HandlerManager;
 import me.matthewe.ticket.io.BasicLogger;
 import me.matthewe.ticket.io.console.ConsoleCommandHandler;
 import me.matthewe.ticket.io.console.OnMessage;
+import me.matthewe.ticket.io.console.command.StopConsoleCommand;
 
 import java.util.logging.Logger;
 
@@ -33,11 +34,16 @@ public class TicketBot {
             return;
         }
         this.registerHandlers();
+        this.registerConsoleCommands();
         this.handlerManager.enableHandlers();
         this.running = true;
 
     }
 
+    private void registerConsoleCommands() {
+        ConsoleCommandHandler commandHandler = this.handlerManager.getHandler(ConsoleCommandHandler.class);
+        commandHandler.registerConsoleCommand(new StopConsoleCommand(this));
+    }
 
 
     public BasicLogger getLogger() {
@@ -59,7 +65,7 @@ public class TicketBot {
     }
 
     public void handleShutdown() {
-        logger.info("Shutting down...");
+        logger.info("Handling shutdown down.");
 
 
     }

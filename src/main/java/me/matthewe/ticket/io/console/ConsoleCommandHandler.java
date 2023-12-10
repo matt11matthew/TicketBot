@@ -27,17 +27,7 @@ public class ConsoleCommandHandler extends Handler {
     }
     @Override
     public void onEnable() {
-
-        registerConsoleCommand(new ConsoleCommand("stop") {
-            @Override
-            public void onCommand(String[] args) {
-                ticketBot.shutdown();
-
-
-            }
-        });
         this.ticketBot.setOnMessage(this::handleCommandInput);
-
     }
 
     private void handleCommandInput(String text) {
