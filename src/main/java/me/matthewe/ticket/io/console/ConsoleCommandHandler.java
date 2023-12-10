@@ -1,6 +1,7 @@
 package me.matthewe.ticket.io.console;
 
 import me.matthewe.ticket.TicketBot;
+import me.matthewe.ticket.config.Config;
 import me.matthewe.ticket.handler.Handler;
 import me.matthewe.ticket.io.console.command.ConsoleCommand;
 
@@ -15,8 +16,8 @@ import java.util.Map;
 public class ConsoleCommandHandler extends Handler {
 
     private Map<String, ConsoleCommand> commandMap;
-    public ConsoleCommandHandler(TicketBot ticketBot) {
-        super(ticketBot);
+    public ConsoleCommandHandler(TicketBot ticketBot, Config config) {
+        super(ticketBot, config);
         this.commandMap = new HashMap<>();
 
     }

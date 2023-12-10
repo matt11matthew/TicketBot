@@ -1,3 +1,19 @@
 {
-
+  "database":{
+    "host": {
+      "address": "localhost",
+      "port": 3306
+    },
+    "auth": {
+      "username": "matthew",
+      "password": "matthew"
+    },
+    "database": "tickets"
+  },
+  "discord": {
+    "auth":{
+      "token": "",
+      "guildId": 1174388099653042176
+    }
+  }
 }

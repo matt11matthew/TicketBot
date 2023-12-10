@@ -12,7 +12,7 @@ target/
 *.iml
 *.ipr
 .idea
-
+token.txt
 
 ### Eclipse ###
 .apt_generated
@@ -40,3 +40,4 @@ build/
 .DS_Store
 .idea/vcs.xml
 .idea/misc.xml
+src/main/resources/token.txt

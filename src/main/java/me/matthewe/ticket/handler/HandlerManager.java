@@ -34,10 +34,11 @@ public class HandlerManager {
     }
 
     public void enableHandlers() {
-        this.ticketBot.getLogger().info("enabling");
+        this.ticketBot.getLogger().info("Starting...");
         this.handlerMap.values().forEach(Handler::onEnable);
     }
     public void disableHandlers() {
-        this.handlerMap.values().forEach(Handler::onEnable);
+        this.ticketBot.getLogger().info("Stopping...");
+        this.handlerMap.values().forEach(Handler::onDisable);
     }
 }

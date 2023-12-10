@@ -17,6 +17,7 @@ public class Main {
 
 
         TicketBot ticketBot = new TicketBot();
+        ticketBot.setDebug(true);
         ticketBot.start();
 
         Thread shutdownHook = new Thread(() -> {
