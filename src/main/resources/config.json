@@ -1,7 +1,7 @@
 {
-  "database":{
+  "database": {
     "host": {
-      "address": "localhost",
+      "address": "127.0.0.1",
       "port": 3306
     },
     "auth": {
@@ -11,9 +11,12 @@
     "database": "tickets"
   },
   "discord": {
-    "auth":{
+    "auth": {
       "token": "",
-      "guildId": 1174388099653042176
+      "guildId": 1174388099653042200
+    },
+    "channels": {
+      "info": 1183495069874016300
     }
   }
 }

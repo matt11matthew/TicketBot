@@ -10,11 +10,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Config {
     @JsonProperty("database")
     public Database database;
-    @JsonProperty("database")
+    @JsonProperty("discord")
     public Discord discord;
 
     public static class Discord {
-        @JsonProperty("auth") public Auth auth;
+        @JsonProperty("auth")
+        public Auth auth;
+        @JsonProperty("channels")
+        public Channels channels;
+
+        public static class Channels {
+            @JsonProperty("info")
+            public long info;
+        }
         public static class Auth {
 
             public String token;
