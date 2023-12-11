@@ -31,6 +31,11 @@ public class Config {
         public static class Messages {
             @JsonProperty("ready")
             public EmbedValue ready;
+            @JsonProperty("set_description")
+            public EmbedValue set_description;
+
+            @JsonProperty("posted")
+            public EmbedValue posted;
         }
         public static class Channels {
             @JsonProperty("info")
@@ -38,6 +43,9 @@ public class Config {
 
             @JsonProperty("ticketCategory")
             public long ticketCategory;
+
+            @JsonProperty("commissions")
+            public long commissions;
         }
         public static class Auth {
 

@@ -45,7 +45,8 @@ public class DiscordHandler extends Handler {
 
     public void onReady() {
         this.guild =  this.jda.getGuildById(this.config.discord.auth.guildId);
-        this.guild.updateCommands().addCommands(Commands.slash("ticket", "Creates ticket")).queue();
+        this.guild.updateCommands().addCommands(
+                Commands.slash("ticket", "Creates ticket"),Commands.slash("purge", "Purges tickets"), Commands.slash("close", "Closes ticket")).queue();
 
         TextChannel channel = this.guild.getTextChannelById(this.config.discord.channels.info);
 

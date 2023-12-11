@@ -16,16 +16,27 @@
         "title": "Ticket Bot",
         "color": -1,
         "description": "Now Ready!"
+      },
+      "set_description": {
+        "title": "Ticket Description",
+        "color": -1,
+        "description": "Please enter what you would like done?"
+      },
+      "posted": {
+        "title": "Ticket Posted!",
+        "color": -1,
+        "description": "Department: %department%\nDescription: %description%"
       }
     },
     "auth": {
       "token": "",
       "guildId": 1174388099653042176
     },
-    "departments": ["Plugin Development", "Build"],
+    "departments": ["Plugin Development", "Builds", "Bot Development"],
     "channels": {
       "info": 1183495069874016256,
-      "ticketCategory": 1183448910522499072
+      "ticketCategory": 1183448910522499072,
+      "commissions": 1183593469613187154
     }
   }
 }

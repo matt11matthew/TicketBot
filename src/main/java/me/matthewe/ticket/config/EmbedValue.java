@@ -2,6 +2,7 @@ package me.matthewe.ticket.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import me.matthewe.ticket.io.utilities.StringReplacer;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 /**
@@ -26,9 +27,12 @@ public class EmbedValue {
         this.description = description;
     }
 
-    public EmbedBuilder toEmbedBuilder(){
-        return new EmbedBuilder().setTitle(title).setColor(color).setDescription(description);
+    public EmbedBuilder toEmbedBuilder(StringReplacer stringReplacer) {
+        return new EmbedBuilder().setTitle(stringReplacer.replace(title)).setColor(color).setDescription(stringReplacer.replace(description));
 
     }
 
+    public EmbedBuilder toEmbedBuilder() {
+        return toEmbedBuilder(s -> s);
+    }
 }
