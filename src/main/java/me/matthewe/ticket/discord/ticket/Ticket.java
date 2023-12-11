@@ -15,7 +15,10 @@ public class Ticket {
     private TicketStatus ticketStatus;
     private String description;
     private TextChannel textChannel;
+    private boolean posted;
 
+
+    private boolean awaitingDescription ;
     private String department;
 
     public Ticket(long id, long clientId, long channelId, long creationDate, TicketStatus ticketStatus) {
@@ -53,10 +56,7 @@ public class Ticket {
     public boolean isAwaitingDescription() {
         return awaitingDescription;
     }
-    private boolean posted;
 
-
-    private boolean awaitingDescription ;
     public void setWaitingDescription(boolean awaitingDescription) {
         this.awaitingDescription = awaitingDescription;
     }
