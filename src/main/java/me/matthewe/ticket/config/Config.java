@@ -22,7 +22,7 @@ public class Config {
         public Auth auth;
         @JsonProperty("channels")
         public Channels channels;
-     @JsonProperty("departments")
+        @JsonProperty("departments")
         public List<String> departments;
 
         @JsonProperty("messages")
@@ -42,12 +42,13 @@ public class Config {
             public EmbedValue created;
             @JsonProperty("commission")
             public EmbedValue commission;
-       @JsonProperty("transcript")
+            @JsonProperty("transcript")
             public EmbedValue transcript;
 
             @JsonProperty("accepted")
             public EmbedValue accepted;
         }
+
         public static class Channels {
             @JsonProperty("info")
             public long info;
@@ -58,11 +59,13 @@ public class Config {
             @JsonProperty("commissions")
             public long commissions;
         }
+
         public static class Auth {
 
             public String token;
 
-            @JsonProperty("guildId")public long guildId;
+            @JsonProperty("guildId")
+            public long guildId;
         }
     }
 
@@ -82,6 +85,7 @@ public class Config {
             @JsonProperty("password")
             public String password;
         }
+
         @JsonProperty("database")
         public String database;
         @JsonProperty("host")
@@ -90,6 +94,4 @@ public class Config {
         @JsonProperty("auth")
         public Auth auth;
     }
-
 }
-
