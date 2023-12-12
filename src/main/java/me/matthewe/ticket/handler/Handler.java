@@ -12,12 +12,14 @@ public abstract class Handler {
     protected Config config;
 
     protected int shutdownPriority;
+
     public Handler(TicketBot ticketBot, Config config) {
         this.ticketBot = ticketBot;
-        this.config= config;
+        this.config = config;
     }
 
     public abstract void onEnable();
+
     public abstract void onDisable();
 
     public int getShutdownPriority() {

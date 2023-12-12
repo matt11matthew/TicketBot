@@ -59,6 +59,7 @@ public class DiscordListener  extends ListenerAdapter {
 //        }
 //        this.currentId = Long.parseLong(FileUtils.readFileToString(new File(tokenPath)));
     }
+
     public Ticket getTicketByChannelId(TextChannel textChannel) {
         for (Ticket value : ticketMap.values()) {
             if (value.getChannelId() == textChannel.getIdLong()) {
@@ -157,8 +158,8 @@ public class DiscordListener  extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getMember()==null)return;
-        if (event.getMember().getUser().isBot())return;
+        if (event.getMember() == null) return;
+        if (event.getMember().getUser().isBot()) return;
         Ticket ticketByChannelId = getTicketByChannelId(event.getChannel().getIdLong());
         if (ticketByChannelId != null && ticketByChannelId.isAwaitingDescription() && event.getMember().getUser().getIdLong() == ticketByChannelId.getClientId()) {
 
@@ -181,7 +182,7 @@ public class DiscordListener  extends ListenerAdapter {
     private void postTicket(Ticket ticketByChannelId) {
 
         TextChannel textChannel = discordHandler.getGuild().getTextChannelById(config.discord.channels.commissions);
-        Button confirmButton = Button.success("accept-" +ticketByChannelId.getChannelId(), "Accept");
+        Button confirmButton = Button.success("accept-" + ticketByChannelId.getChannelId(), "Accept");
 
         textChannel.sendMessageEmbeds(config.discord.messages.commission
                 .toEmbedBuilder(s -> new String(s).replaceAll("%id%", ticketByChannelId.getId().toString())
@@ -192,10 +193,10 @@ public class DiscordListener  extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        if (event.getButton().getId().startsWith("accept-")){
+        if (event.getButton().getId().startsWith("accept-")) {
             long id = Long.parseLong(event.getButton().getId().split("accept-")[1].trim());
             Ticket ticketByChannelId = getTicketByChannelId(id);
-            if (ticketByChannelId!=null){
+            if (ticketByChannelId != null) {
                 event.getInteraction().getMessage().delete().queue();
 //                event.reply("ACCEPTED " + ticketByChannelId.getId().toString()).queue();
 
@@ -244,7 +245,7 @@ public class DiscordListener  extends ListenerAdapter {
                 List<Message> messages = event.getChannel().getHistory().retrievePast(100).complete(); // Adjust the number as needed
 
                 // Save messages to a file
-                File file = new File(ticketByChannelId.getId().toString() +"_transcript.txt");
+                File file = new File(ticketByChannelId.getId().toString() + "_transcript.txt");
                 try (PrintWriter writer = new PrintWriter(new FileWriter(file, true))) {
                     for (Message message : messages) {
                         writer.println(message.getAuthor().getName() + ": " + message.getContentRaw());
@@ -257,7 +258,7 @@ public class DiscordListener  extends ListenerAdapter {
 
                 PrivateChannel complete = event.getGuild().getMemberById(ticketByChannelId.getClientId()).getUser().openPrivateChannel().complete();
                 complete.sendMessageEmbeds(config.discord.messages.transcript.toEmbedBuilder(s -> new String(s).replaceAll("%id%", ticketByChannelId.getId().toString())
-                        .replaceAll("%mention%", event.getMember().getAsMention())).build())
+                                .replaceAll("%mention%", event.getMember().getAsMention())).build())
                         .addFiles(FileUpload.fromData(file)).queue(message -> file.delete());
 
 
@@ -306,7 +307,7 @@ public class DiscordListener  extends ListenerAdapter {
     public void purgeDeadTickets() {
         List<TextChannel> toPurgeList = new ArrayList<>();
         for (Guild guild : discordHandler.getJda().getGuilds()) {
-            if (guild.getIdLong()==config.discord.auth.guildId){
+            if (guild.getIdLong() == config.discord.auth.guildId) {
                 for (TextChannel textChannel : guild.getTextChannels()) {
                     if (textChannel.getName().startsWith("ticket-")) {
                         if (getTicketByChannelId(textChannel.getIdLong()) == null) {

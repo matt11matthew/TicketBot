@@ -18,7 +18,7 @@ public class EmbedValue {
     public String description;
 
 
-    public EmbedValue(){
+    public EmbedValue() {
 
     }
     public EmbedValue(String title, int color, String description) {
