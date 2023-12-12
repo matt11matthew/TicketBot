@@ -11,6 +11,7 @@ public abstract class Handler {
     protected TicketBot ticketBot;
     protected Config config;
 
+    private int shutdownPriority;
     public Handler(TicketBot ticketBot, Config config) {
         this.ticketBot = ticketBot;
         this.config= config;
@@ -19,4 +20,11 @@ public abstract class Handler {
     public abstract void onEnable();
     public abstract void onDisable();
 
+    public int getShutdownPriority() {
+        return shutdownPriority;
+    }
+
+    public void setShutdownPriority(int shutdownPriority) {
+        this.shutdownPriority = shutdownPriority;
+    }
 }

@@ -39,6 +39,11 @@ public class HandlerManager {
     }
     public void disableHandlers() {
         this.ticketBot.getLogger().info("Stopping...");
-        this.handlerMap.values().forEach(Handler::onDisable);
+        this.handlerMap.values().stream().sorted((o1, o2) -> o2.getShutdownPriority()-o1.getShutdownPriority()).forEach(handler -> {
+            ticketBot.getLogger().info("Disabling " + handler.getClass().getSimpleName());
+            handler.onDisable();
+
+        });
+
     }
 }

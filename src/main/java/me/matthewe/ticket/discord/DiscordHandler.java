@@ -2,6 +2,7 @@ package me.matthewe.ticket.discord;
 
 import me.matthewe.ticket.TicketBot;
 import me.matthewe.ticket.config.Config;
+import me.matthewe.ticket.database.DatabaseHandler;
 import me.matthewe.ticket.handler.Handler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
@@ -28,14 +29,19 @@ public class DiscordHandler extends Handler {
     private JDA jda;
     public DiscordHandler(TicketBot ticketBot, Config config) {
         super(ticketBot, config);
+        setShutdownPriority(10);
     }
 
+    public DatabaseHandler getDatabaseHandler() {
+        return ticketBot.getDatabaseHandler();
+    }
     @Override
     public void onEnable() {
         System.out.println(this.config.discord.auth.token);
         this.jda = JDABuilder.createDefault(this.config.discord.auth.token).build();
         this.discordListener = new DiscordListener(this,this.ticketBot,this.config);
         jda.addEventListener(discordListener);
+        this.discordListener.downloadTicketsFromDatabase();
 
 
 //        this.guild =  this.jda.getGuilds(this.config.discord.auth.guildId);
@@ -60,6 +66,7 @@ public class DiscordHandler extends Handler {
 
     @Override
     public void onDisable() {
+        this.discordListener.uploadAllTicketsToDatabase();
 
     }
 

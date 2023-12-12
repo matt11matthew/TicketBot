@@ -53,7 +53,9 @@ public class TicketBot {
         this.handlerManager.registerHandler(new DiscordHandler(this, this.config));
 
     }
-
+    public DatabaseHandler getDatabaseHandler() {
+        return handlerManager.getHandler(DatabaseHandler.class);
+    }
     public void start() {
         if (this.running) {
             logger.error("The bot is already running");

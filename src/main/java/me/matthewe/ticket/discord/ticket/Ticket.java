@@ -9,24 +9,39 @@ public class Ticket {
     private long id;
     private long clientId;
     private long channelId;
-
     private long creationDate;
-
     private TicketStatus ticketStatus;
     private String description;
     private TextChannel textChannel;
     private boolean posted;
-
-
     private boolean awaitingDescription ;
     private String department;
+    private long freelancerId;
 
-    public Ticket(long id, long clientId, long channelId, long creationDate, TicketStatus ticketStatus) {
+    public Ticket(long id, long clientId, long channelId, long creationDate, TicketStatus ticketStatus, String description, TextChannel textChannel, boolean posted, boolean awaitingDescription, String department, long freelancerId) {
         this.id = id;
         this.clientId = clientId;
         this.channelId = channelId;
         this.creationDate = creationDate;
         this.ticketStatus = ticketStatus;
+        this.description = description;
+        this.textChannel = textChannel;
+        this.posted = posted;
+        this.awaitingDescription = awaitingDescription;
+        this.department = department;
+        this.freelancerId = freelancerId;
+    }
+
+    public long getCreationDate() {
+        return creationDate;
+    }
+
+    public long getFreelancerId() {
+        return freelancerId;
+    }
+
+    public void setFreelancerId(long freelancerId) {
+        this.freelancerId = freelancerId;
     }
 
     public TextChannel getTextChannel() {

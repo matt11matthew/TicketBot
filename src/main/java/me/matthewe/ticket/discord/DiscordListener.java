@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.requests.restaction.ChannelAction;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +41,7 @@ public class DiscordListener  extends ListenerAdapter {
         this.discordHandler = discordHandler;
         this.ticketBot = ticketBot;
         this.config = config;
+        downloadTicketsFromDatabase();
     }
 
     public Ticket getTicketByChannelId(long id) {
@@ -74,10 +76,13 @@ public class DiscordListener  extends ListenerAdapter {
         ChannelAction<TextChannel> ticketChannel = guild.createTextChannel("ticket-" + member.getUser().getName(), guild.getCategoryById(this.config.discord.channels.ticketCategory));
         TextChannel complete = ticketChannel.clearPermissionOverrides().complete();
 
-        Ticket ticket = new Ticket(ticketMap.size() + 1, member.getIdLong(), complete.getIdLong(), System.currentTimeMillis(), TicketStatus.OPENED);
+//        Ticket ticket = new Ticket(ticketMap.size() + 1, member.getIdLong(), complete.getIdLong(), System.currentTimeMillis(), TicketStatus.OPENED);
+        Ticket ticket = new Ticket(ticketMap.size() + 1, member.getIdLong(), complete.getIdLong(), System.currentTimeMillis(), TicketStatus.OPENED,null, complete, false, false,null, -1);
+//        Ticket ticket = new Ticket(ticketMap.size() + 1, member.getIdLong(), complete.getIdLong(), System.currentTimeMillis(), TicketStatus.OPENED);
 
         ticketMap.put(ticket.getId(), ticket);
 
+        createTicketDatabase(ticket);
 
         StringSelectMenu.Builder builder = StringSelectMenu.create("menu:" + complete.getIdLong())
                 .setPlaceholder("Choose Department");
@@ -91,6 +96,7 @@ public class DiscordListener  extends ListenerAdapter {
                 .addActionRow(menu)
                 .queue();
     }
+
 
     @Override
     public void onStringSelectInteraction(StringSelectInteractionEvent event) {
@@ -139,6 +145,7 @@ public class DiscordListener  extends ListenerAdapter {
 
                    event.getChannel().sendMessageEmbeds(config.discord.messages.posted.toEmbedBuilder(s -> new String(s).replaceAll("%description%", event.getMessage().getContentDisplay()).replaceAll("%department%", ticketByChannelId.getDepartment())).build()).queue();
                     ticketByChannelId.setPosted(true);
+                   updateTicketInDatabase(ticketByChannelId);
                }
 
             })));
@@ -146,6 +153,8 @@ public class DiscordListener  extends ListenerAdapter {
 
         }
     }
+
+
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -172,13 +181,42 @@ public class DiscordListener  extends ListenerAdapter {
                 event.getChannel().delete().queue();
 
                 ticketMap.remove(ticketByChannelId.getId());
+                deleteTicketFromDatabase(ticketByChannelId);
             }
 
 
         }
     }
 
-    private void deleteAllTicketsFromDatabase() {
-        //TODO
+    public void deleteTicketFromDatabase(Ticket ticket) {
+        this.ticketBot.getDatabaseHandler().deleteTicketFromDatabase(ticket);
+
     }
+    public void updateTicketInDatabase(Ticket ticket) {
+        this.ticketBot.getDatabaseHandler().updateTicketInDatabase(ticket);
+    }
+
+    public void deleteAllTicketsFromDatabase() {
+        this.ticketBot.getDatabaseHandler().deleteAllTicketsFromDatabase();
+    }
+
+    public void downloadTicketsFromDatabase() {
+        //TODO
+        this.ticketMap = new HashMap<>();
+        List<Ticket> tickets = this.ticketBot.getDatabaseHandler().downloadTicketsFromDatabase();
+        for (Ticket ticket : tickets) {
+            ticketBot.getLogger().info("[DiscordListener] [DatabaseHandler] Downloaded ticket " + ticket.getId());
+            this.ticketMap.put(ticket.getId(), ticket);
+        }
+    }
+
+    public void uploadAllTicketsToDatabase() {
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.addAll(ticketMap.values());
+        this.ticketBot.getDatabaseHandler().uploadAllTicketsToDatabase(tickets);
+    }
+    public void createTicketDatabase(Ticket ticket) {
+        this.ticketBot.getDatabaseHandler().createTicketDatabase(ticket);
+    }
+
 }
