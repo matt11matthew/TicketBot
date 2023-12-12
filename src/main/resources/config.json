@@ -32,11 +32,27 @@
         "color": -1,
         "description": "All tickets have been purged"
       },
+      "accepted": {
+        "title": "Ticket Accepted",
+        "color": -1,
+        "description": "%mention% has claimed your ticket!"
+      },
       "created": {
         "title": "Created",
         "color": -1,
         "description": "Ticket created!"
+      },
+      "commission": {
+        "title": "Commission %id%",
+        "color": -1,
+        "description": "Department: %department%\nDescription: %description%\n"
+      },
+      "transcript": {
+        "title": "Transcript %id%",
+        "color": -1,
+        "description": "Feel free to download the transcript!"
       }
+
     },
     "auth": {
       "token": "",

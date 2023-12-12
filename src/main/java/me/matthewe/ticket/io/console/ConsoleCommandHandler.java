@@ -14,18 +14,18 @@ import java.util.Map;
  * Created by Matthew E on 12/10/2023 at 12:04 PM for the project TicketBot
  */
 public class ConsoleCommandHandler extends Handler {
-
     private Map<String, ConsoleCommand> commandMap;
+
     public ConsoleCommandHandler(TicketBot ticketBot, Config config) {
         super(ticketBot, config);
         this.commandMap = new HashMap<>();
-
     }
 
     public void registerConsoleCommand(ConsoleCommand consoleCommand) {
         this.commandMap.put(consoleCommand.getName().toLowerCase(), consoleCommand);
-        this.ticketBot.getLogger().info("[ConsoleHandler] Registered console command '" +consoleCommand.getName().toLowerCase()+"'");
+        this.ticketBot.getLogger().info("[ConsoleHandler] Registered console command '" + consoleCommand.getName().toLowerCase() + "'");
     }
+
     @Override
     public void onEnable() {
         this.ticketBot.setOnMessage(this::handleCommandInput);
@@ -35,12 +35,11 @@ public class ConsoleCommandHandler extends Handler {
         String command = null;
         List<String> argList = new ArrayList<>();
 
-        if (text.contains(" ")){
-
+        if (text.contains(" ")) { //Multiple arguments
             String[] split = text.split(" ");
             for (int i = 0; i < split.length; i++) {
-                if (i==0){
-                    command=split[i];
+                if (i == 0) {
+                    command = split[i];
                 } else {
                     argList.add(split[i]);
                 }
@@ -50,12 +49,11 @@ public class ConsoleCommandHandler extends Handler {
         }
         String[] args = new String[argList.size()];
         for (int i = 0; i < argList.size(); i++) {
-            args[i]=argList.get(i);
+            args[i] = argList.get(i);
         }
 
-        if (command!=null&&commandMap.containsKey(command.toLowerCase())){
+        if (command != null && commandMap.containsKey(command.toLowerCase())) {
             commandMap.get(command.toLowerCase()).onCommand(args);
-
         }
     }
 

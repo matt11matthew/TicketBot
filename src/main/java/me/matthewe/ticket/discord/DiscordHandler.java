@@ -30,7 +30,7 @@ public class DiscordHandler extends Handler {
     private JDA jda;
     public DiscordHandler(TicketBot ticketBot, Config config) {
         super(ticketBot, config);
-        setShutdownPriority(10);
+        this.shutdownPriority = 10; //Ensures database starts first but ends last.
     }
 
     public Guild getGuild() {
@@ -44,29 +44,24 @@ public class DiscordHandler extends Handler {
     public void onEnable() {
         System.out.println(this.config.discord.auth.token);
         this.jda = JDABuilder.createDefault(this.config.discord.auth.token).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
-        this.discordListener = new DiscordListener(this,this.ticketBot,this.config);
-        jda.addEventListener(discordListener);
+        this.discordListener = new DiscordListener(this, this.ticketBot, this.config);
+
+        this.jda.addEventListener(discordListener);
         this.discordListener.downloadTicketsFromDatabase();
-
-
-//        this.guild =  this.jda.getGuilds(this.config.discord.auth.guildId);
-//        guild.updateCommands().addCommands(Commands.slash("ticket", "Creates ticket"));
-
     }
 
     public void onReady() {
         this.guild =  this.jda.getGuildById(this.config.discord.auth.guildId);
         this.guild.updateCommands().addCommands(
-                Commands.slash("ticket", "Creates ticket"),Commands.slash("purge", "Purges tickets"), Commands.slash("close", "Closes ticket")).queue();
+                Commands.slash("ticket", "Creates ticket"),
+                Commands.slash("purge", "Purges tickets"),
+                Commands.slash("close", "Closes ticket"))
+                .queue();
 
         TextChannel channel = this.guild.getTextChannelById(this.config.discord.channels.info);
-
         channel.sendMessageEmbeds(this.config.discord.messages.ready.toEmbedBuilder().build()).queue();
-
-        System.out.println(channel);
-
-
-        this.discordListener.purgeDeadTickets();
+        System.out.println(channel); //DEBUG MESSAGE
+        this.discordListener.purgeDeadTickets(); //Deletes channels if ticket nolonger exists
 
     }
     public JDA getJda() {
@@ -79,13 +74,8 @@ public class DiscordHandler extends Handler {
 
     }
 
-
-    public boolean isReady() {
-        return ready;
-    }
-
     public void setReady(boolean ready) {
-        if (!this.ready&&ready) {
+        if (!this.ready && ready) {
             this.ticketBot.getLogger().info("[DiscordHandler] bot now ready!");
             onReady();
         }
@@ -93,7 +83,6 @@ public class DiscordHandler extends Handler {
     }
 
     public void handleShutdownFast() {
-
         this.discordListener.onShutdown();
     }
 }

@@ -10,23 +10,20 @@ import java.util.Scanner;
 public class Main {
 
 
-
     public static void main(String[] args) {
-
-
-
-
         TicketBot ticketBot = new TicketBot();
         ticketBot.start();
 
-        Thread shutdownHook = new Thread(() -> {
-            ticketBot.handleShutdown();
-        });
+        Thread shutdownHook = new Thread(ticketBot::handleShutdown);
         Runtime.getRuntime().addShutdownHook(shutdownHook);
-        Scanner  scanner = new Scanner(System.in);
-        while (scanner.hasNext()){
+
+        /*
+        Handles commands
+         */
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
             String next = scanner.nextLine();
-            if (next.isEmpty())continue;
+            if (next.isEmpty()) continue;
             ticketBot.onMessage(next);
         }
 

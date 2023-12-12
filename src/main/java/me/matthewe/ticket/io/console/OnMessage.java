@@ -5,6 +5,5 @@ package me.matthewe.ticket.io.console;
  */
 @FunctionalInterface
 public interface OnMessage {
-
     void onMessage(String text);
 }

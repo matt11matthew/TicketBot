@@ -8,10 +8,13 @@ import me.matthewe.ticket.io.utilities.FileUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -22,9 +25,13 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.requests.restaction.ChannelAction;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 import java.util.List;
 
@@ -51,6 +58,15 @@ public class DiscordListener  extends ListenerAdapter {
 //            tokenPath = "C:\\Users\\Matthew Eisenberg\\eclipse-workspace\\TicketBot\\src\\main\\resources\\data.txt";
 //        }
 //        this.currentId = Long.parseLong(FileUtils.readFileToString(new File(tokenPath)));
+    }
+    public Ticket getTicketByChannelId(TextChannel textChannel) {
+        for (Ticket value : ticketMap.values()) {
+            if (value.getChannelId() == textChannel.getIdLong()) {
+                value.setTextChannel(textChannel);
+                return value;
+            }
+        }
+        return null;
     }
 
     public Ticket getTicketByChannelId(long id) {
@@ -141,6 +157,7 @@ public class DiscordListener  extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+        if (event.getMember()==null)return;
         if (event.getMember().getUser().isBot())return;
         Ticket ticketByChannelId = getTicketByChannelId(event.getChannel().getIdLong());
         if (ticketByChannelId != null && ticketByChannelId.isAwaitingDescription() && event.getMember().getUser().getIdLong() == ticketByChannelId.getClientId()) {
@@ -158,27 +175,47 @@ public class DiscordListener  extends ListenerAdapter {
                 updateTicketInDatabase(ticketByChannelId);
                 postTicket(ticketByChannelId);
             }
-
-//            event.getChannel().getHistory().retrievePast(5).queue(messages -> messages.forEach(message -> message.delete().queue(unused -> {
-//                if (!ticketByChannelId.isPosted()) {
-//
-//                    event.getChannel().sendMessageEmbeds(config.discord.messages.posted.toEmbedBuilder(s -> new String(s).replaceAll("%description%", event.getMessage().getContentDisplay()).replaceAll("%department%", ticketByChannelId.getDepartment())).build()).queue();
-//                    ticketByChannelId.setPosted(true);
-//                    updateTicketInDatabase(ticketByChannelId);
-//                }
-//
-//            })));
-            //TODO POST TICKET
-
         }
     }
 
     private void postTicket(Ticket ticketByChannelId) {
 
         TextChannel textChannel = discordHandler.getGuild().getTextChannelById(config.discord.channels.commissions);
-        textChannelById.sendMessage(ticketByChannelId.toString()).queue();
+        Button confirmButton = Button.success("accept-" +ticketByChannelId.getChannelId(), "Accept");
+
+        textChannel.sendMessageEmbeds(config.discord.messages.commission
+                .toEmbedBuilder(s -> new String(s).replaceAll("%id%", ticketByChannelId.getId().toString())
+                        .replaceAll("%description%", ticketByChannelId.getDescription())
+                        .replaceAll("%department%", ticketByChannelId.getDepartment()))
+                .build()).setActionRow(confirmButton).queue();
     }
 
+    @Override
+    public void onButtonInteraction(ButtonInteractionEvent event) {
+        if (event.getButton().getId().startsWith("accept-")){
+            long id = Long.parseLong(event.getButton().getId().split("accept-")[1].trim());
+            Ticket ticketByChannelId = getTicketByChannelId(id);
+            if (ticketByChannelId!=null){
+                event.getInteraction().getMessage().delete().queue();
+//                event.reply("ACCEPTED " + ticketByChannelId.getId().toString()).queue();
+
+                ticketByChannelId.setFreelancerId(event.getMember().getIdLong()); //Sets freelancer
+
+                TextChannel textChannelById = event.getGuild().getTextChannelById(id); //Gets text channel
+                ticketByChannelId.setTextChannel(textChannelById); //NOT NEEDED
+
+                ticketByChannelId.setTicketStatus(TicketStatus.ACCEPTED);
+                ticketByChannelId.setFreelancerId(event.getMember().getIdLong());
+
+                textChannelById.sendMessageEmbeds(config.discord.messages.accepted.toEmbedBuilder(s -> new String(s).replaceAll("%mention%", event.getMember().getAsMention())).build()).queue();
+
+
+                updateTicketInDatabase(ticketByChannelId);// Uploads to database
+            }
+
+        }
+
+    }
 
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -186,7 +223,6 @@ public class DiscordListener  extends ListenerAdapter {
             createTicketChannel(event.getGuild(), event.getMember());
             event.replyEmbeds(config.discord.messages.created.toEmbedBuilder().build()).queue();
             return;
-
         }
         if (event.getName().equals("purge")) {
             for (TextChannel textChannel : event.getGuild().getTextChannels()) {
@@ -204,13 +240,34 @@ public class DiscordListener  extends ListenerAdapter {
             Ticket ticketByChannelId = getTicketByChannelId(event.getChannel().getIdLong());
             if (ticketByChannelId != null) {
                 System.out.println(event.getChannel().getHistory());
+                // Retrieve messages
+                List<Message> messages = event.getChannel().getHistory().retrievePast(100).complete(); // Adjust the number as needed
+
+                // Save messages to a file
+                File file = new File(ticketByChannelId.getId().toString() +"_transcript.txt");
+                try (PrintWriter writer = new PrintWriter(new FileWriter(file, true))) {
+                    for (Message message : messages) {
+                        writer.println(message.getAuthor().getName() + ": " + message.getContentRaw());
+                    }
+                    writer.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+                PrivateChannel complete = event.getGuild().getMemberById(ticketByChannelId.getClientId()).getUser().openPrivateChannel().complete();
+                complete.sendMessageEmbeds(config.discord.messages.transcript.toEmbedBuilder(s -> new String(s).replaceAll("%id%", ticketByChannelId.getId().toString())
+                        .replaceAll("%mention%", event.getMember().getAsMention())).build())
+                        .addFiles(FileUpload.fromData(file)).queue(message -> file.delete());
+
+
+                System.out.println("Transcript saved to " + file.getAbsolutePath());
+
                 event.getChannel().delete().queue();
 
                 ticketMap.remove(ticketByChannelId.getId());
                 deleteTicketFromDatabase(ticketByChannelId);
             }
-
-
         }
     }
 
@@ -228,7 +285,6 @@ public class DiscordListener  extends ListenerAdapter {
     }
 
     public void downloadTicketsFromDatabase() {
-        //TODO
         this.ticketMap = new HashMap<>();
         List<Ticket> tickets = this.ticketBot.getDatabaseHandler().downloadTicketsFromDatabase();
         for (Ticket ticket : tickets) {

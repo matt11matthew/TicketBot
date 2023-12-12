@@ -19,7 +19,7 @@ public class DatabaseHandler  extends Handler {
 
     public DatabaseHandler(TicketBot ticketBot, Config config) {
         super(ticketBot, config);
-        setShutdownPriority(5);
+        this.shutdownPriority = 5;
     }
 
     @Override
@@ -211,6 +211,7 @@ public class DatabaseHandler  extends Handler {
             // Handle exception or rethrow it as needed
         }
     }
+
     public void createTicketDatabase(Ticket ticket) {
         String sql = "INSERT INTO Tickets (id, clientId, channelId, creationDate, ticketStatus, description, posted, awaitingDescription, department, freelancerId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -239,6 +240,4 @@ public class DatabaseHandler  extends Handler {
             // Handle exception or rethrow it as needed
         }
     }
-
-
 }

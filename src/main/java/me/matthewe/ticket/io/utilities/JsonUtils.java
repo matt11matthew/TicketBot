@@ -22,6 +22,7 @@ public class JsonUtils {
         }
     }
 
+    @Deprecated //NO LONGER NEEDED
     public static void testJsonObject(Object object) {
 
         ObjectMapper objectMapper = new ObjectMapper();

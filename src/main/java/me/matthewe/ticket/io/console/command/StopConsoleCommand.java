@@ -13,9 +13,6 @@ public class StopConsoleCommand extends ConsoleCommand{
 
     @Override
     public void onCommand(String[] args) {
-
         System.exit(0);
-
-
     }
 }

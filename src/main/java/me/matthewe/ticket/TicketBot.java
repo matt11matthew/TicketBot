@@ -39,18 +39,16 @@ public class TicketBot {
         this.logger = new BasicLogger(this);
     }
 
-
-
-
     private void registerHandlers() {
         this.handlerManager.registerHandler(new DatabaseHandler(this, this.config));
         this.handlerManager.registerHandler(new ConsoleCommandHandler(this, this.config));
         this.handlerManager.registerHandler(new DiscordHandler(this, this.config));
-
     }
+
     public DatabaseHandler getDatabaseHandler() {
         return handlerManager.getHandler(DatabaseHandler.class);
     }
+
     public void start() {
         if (this.running) {
             logger.error("The bot is already running");
@@ -81,9 +79,6 @@ public class TicketBot {
         if (DEBUG) {
             tokenPath = "C:\\Users\\Matthew Eisenberg\\eclipse-workspace\\TicketBot\\src\\main\\resources\\token.txt";
         }
-
-
-
         Config config = loadJsonObjectFromFile(new File(path), Config.class);
         config.discord.auth.token = FileUtils.readFileToString(new File(tokenPath));
         this.config = config;
@@ -111,8 +106,6 @@ public class TicketBot {
         this.handlerManager.getHandler(DiscordHandler.class).handleShutdownFast();
         logger.info("Handling shutdown down.");
         this.handlerManager.disableHandlers();
-
-
     }
 
     public Config getConfig() {

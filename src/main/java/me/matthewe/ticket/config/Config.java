@@ -40,6 +40,13 @@ public class Config {
             public EmbedValue purged;
             @JsonProperty("created")
             public EmbedValue created;
+            @JsonProperty("commission")
+            public EmbedValue commission;
+       @JsonProperty("transcript")
+            public EmbedValue transcript;
+
+            @JsonProperty("accepted")
+            public EmbedValue accepted;
         }
         public static class Channels {
             @JsonProperty("info")
