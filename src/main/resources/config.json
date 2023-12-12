@@ -26,6 +26,16 @@
         "title": "Ticket Posted!",
         "color": -1,
         "description": "Department: %department%\nDescription: %description%"
+      },
+      "purged": {
+        "title": "Purged",
+        "color": -1,
+        "description": "All tickets have been purged"
+      },
+      "created": {
+        "title": "Created",
+        "color": -1,
+        "description": "Ticket created!"
       }
     },
     "auth": {

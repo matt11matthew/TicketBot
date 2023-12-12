@@ -36,6 +36,10 @@ public class Config {
 
             @JsonProperty("posted")
             public EmbedValue posted;
+            @JsonProperty("purged")
+            public EmbedValue purged;
+            @JsonProperty("created")
+            public EmbedValue created;
         }
         public static class Channels {
             @JsonProperty("info")

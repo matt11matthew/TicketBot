@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 /**
@@ -32,13 +33,17 @@ public class DiscordHandler extends Handler {
         setShutdownPriority(10);
     }
 
+    public Guild getGuild() {
+        return guild;
+    }
+
     public DatabaseHandler getDatabaseHandler() {
         return ticketBot.getDatabaseHandler();
     }
     @Override
     public void onEnable() {
         System.out.println(this.config.discord.auth.token);
-        this.jda = JDABuilder.createDefault(this.config.discord.auth.token).build();
+        this.jda = JDABuilder.createDefault(this.config.discord.auth.token).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
         this.discordListener = new DiscordListener(this,this.ticketBot,this.config);
         jda.addEventListener(discordListener);
         this.discordListener.downloadTicketsFromDatabase();
@@ -59,6 +64,10 @@ public class DiscordHandler extends Handler {
         channel.sendMessageEmbeds(this.config.discord.messages.ready.toEmbedBuilder().build()).queue();
 
         System.out.println(channel);
+
+
+        this.discordListener.purgeDeadTickets();
+
     }
     public JDA getJda() {
         return jda;

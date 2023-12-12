@@ -2,11 +2,13 @@ package me.matthewe.ticket.discord.ticket;
 
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
+import java.util.UUID;
+
 /**
  * Created by Matthew E on 12/10/2023 at 3:08 PM for the project TicketBot
  */
 public class Ticket {
-    private long id;
+    private UUID id;
     private long clientId;
     private long channelId;
     private long creationDate;
@@ -18,7 +20,7 @@ public class Ticket {
     private String department;
     private long freelancerId;
 
-    public Ticket(long id, long clientId, long channelId, long creationDate, TicketStatus ticketStatus, String description, TextChannel textChannel, boolean posted, boolean awaitingDescription, String department, long freelancerId) {
+    public Ticket(UUID id, long clientId, long channelId, long creationDate, TicketStatus ticketStatus, String description, TextChannel textChannel, boolean posted, boolean awaitingDescription, String department, long freelancerId) {
         this.id = id;
         this.clientId = clientId;
         this.channelId = channelId;
@@ -30,6 +32,33 @@ public class Ticket {
         this.awaitingDescription = awaitingDescription;
         this.department = department;
         this.freelancerId = freelancerId;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setChannelId(long channelId) {
+        this.channelId = channelId;
+    }
+
+    public void setCreationDate(long creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setTicketStatus(TicketStatus ticketStatus) {
+        this.ticketStatus = ticketStatus;
+    }
+
+    public void setAwaitingDescription(boolean awaitingDescription) {
+        this.awaitingDescription = awaitingDescription;
+    }
+
+    public Ticket() {
     }
 
     public long getCreationDate() {
@@ -52,7 +81,7 @@ public class Ticket {
         this.textChannel = textChannel;
     }
 
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 

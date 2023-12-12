@@ -26,7 +26,7 @@ public class TicketBot {
     private final BasicLogger logger;
     private boolean running;
 
-    private boolean debug;
+    public static boolean DEBUG = true;
 
     private OnMessage onMessage;
 
@@ -39,13 +39,8 @@ public class TicketBot {
         this.logger = new BasicLogger(this);
     }
 
-    public boolean isDebug() {
-        return debug;
-    }
 
-    public void setDebug(boolean debug) {
-        this.debug = debug;
-    }
+
 
     private void registerHandlers() {
         this.handlerManager.registerHandler(new DatabaseHandler(this, this.config));
@@ -78,12 +73,12 @@ public class TicketBot {
 
     private void setupConfig() {
         String path = "config.json";
-        if (debug) {
+        if (DEBUG) {
             path = "C:\\Users\\Matthew Eisenberg\\eclipse-workspace\\TicketBot\\src\\main\\resources\\config.json";
         }
 
         String tokenPath = "token.txt";
-        if (debug) {
+        if (DEBUG) {
             tokenPath = "C:\\Users\\Matthew Eisenberg\\eclipse-workspace\\TicketBot\\src\\main\\resources\\token.txt";
         }
 
